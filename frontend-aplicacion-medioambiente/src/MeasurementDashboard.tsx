@@ -16,7 +16,7 @@ const MeasurementDashboard: React.FC = () => {
   const fetchMeasurements = async () => {
     try {
       console.log('Fetching measurements...');
-      const response = await fetch('http://localhost:4000/api/v1/mediciones/');
+      const response = await fetch('http://localhost:3000/api/v1/mediciones/');
       const data: Measurement[] = await response.json();
       console.log('Received data:', data);
       setMeasurements(data);
