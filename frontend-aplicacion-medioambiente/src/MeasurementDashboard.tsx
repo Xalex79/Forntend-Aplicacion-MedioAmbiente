@@ -12,9 +12,11 @@ interface Measurement {
 
 const MeasurementDashboard: React.FC = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Nuevo estado para carga
 
   const fetchMeasurements = async () => {
     try {
+      setLoading(true); // Comienza la carga
       console.log('Fetching measurements...');
       const response = await fetch('http://localhost:3000/api/v1/mediciones/');
       const data: Measurement[] = await response.json();
@@ -22,6 +24,8 @@ const MeasurementDashboard: React.FC = () => {
       setMeasurements(data);
     } catch (error) {
       console.error('Error fetching measurements:', error);
+    } finally {
+      setLoading(false); // Termina la carga
     }
   };
 
@@ -36,7 +40,9 @@ const MeasurementDashboard: React.FC = () => {
   return (
     <div className="container mx-auto mt-8 p-4">
       <h1 className="text-2xl font-bold mb-4">Sensor Measurements Dashboard</h1>
-      {measurements.length === 0 ? (
+      {loading ? ( // Muestra "Loading..." si está cargando
+        <p>Loading...</p>
+      ) : measurements.length === 0 ? (
         <p>No measurements available</p>
       ) : (
         <table className="min-w-full bg-white border border-gray-300">
