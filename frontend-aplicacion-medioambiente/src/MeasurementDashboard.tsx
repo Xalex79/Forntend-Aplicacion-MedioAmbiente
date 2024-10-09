@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
+/**
+ * @brief Define la interfaz para el tipo de dato `Measurement`.
+ * @author Alejandro Rosado
+ * @param Ninguno
+ * @return Ninguno
+ * 
+ * Esta interfaz describe la estructura de un objeto de medición, incluyendo su ID, concentración, temperatura, ubicación y fechas de creación y actualización.
+ */
 interface Measurement {
   _id: string;
   Concrentracion_ppm: number;
@@ -10,10 +18,36 @@ interface Measurement {
   updatedAt: string;
 }
 
+/**
+ * @brief Componente funcional de React que muestra el tablero de mediciones.
+ * @author Alejandro Rosado
+ * @param Ninguno
+ * @return JSX Elemento que representa la estructura del tablero de mediciones.
+ * 
+ * Este componente se encarga de:
+ *  - Manejar el estado de las mediciones (`measurements`) utilizando `useState`.
+ *  - Manejar el estado de carga (`loading`) utilizando `useState`.
+ *  - Obtener las mediciones del backend con la función `fetchMeasurements`.
+ *  - Mostrar un mensaje de carga mientras se obtienen las mediciones o un mensaje si no hay mediciones disponibles.
+ *  - Renderizar una tabla con las mediciones obtenidas.
+ */
 const MeasurementDashboard: React.FC = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Nuevo estado para carga
 
+  /**
+   * @brief Obtiene las mediciones del backend mediante una petición GET a la API.
+   * @author Alejandro Rosado
+   * @param Ninguno
+   * @return void
+   * 
+   * Esta función:
+   *  - Establece el estado de carga a `true` antes de la petición.
+   *  - Realiza una petición GET a la API para obtener las mediciones.
+   *  - Actualiza el estado de `measurements` con las mediciones obtenidas.
+   *  - Maneja posibles errores durante la petición.
+   *  - Establece el estado de carga a `false` después de la petición.
+   */
   const fetchMeasurements = async () => {
     try {
       setLoading(true); // Comienza la carga
@@ -29,6 +63,17 @@ const MeasurementDashboard: React.FC = () => {
     }
   };
 
+  /**
+   * @brief Ejecuta la función `fetchMeasurements` al renderizar el componente y cada 5 segundos.
+   * @author Alejandro Rosado
+   * @param Ninguno
+   * @return void
+   * 
+   * Este efecto secundario utiliza `useEffect`:
+   *  - Llama a `fetchMeasurements` para obtener las mediciones iniciales.
+   *  - Crea un intervalo que llama a `fetchMeasurements` cada 5 segundos.
+   *  - Limpia el intervalo al desmontar el componente para evitar fugas de memoria.
+   */
   useEffect(() => {
     fetchMeasurements();
     const interval = setInterval(fetchMeasurements, 5000); // Fetch every 5 seconds
